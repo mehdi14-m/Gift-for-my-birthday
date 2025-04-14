@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Squid Game Birthday</title>
   <link rel="icon" type="image/png" href="bir.png"/>
+
+  <!-- No automatic audio playback -->
+  <script>
+    // Audio will only play when the button is clicked
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -33,7 +35,7 @@
 
     .container {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -45,8 +47,8 @@
     .floating-shapes {
       position: absolute;
       inset: 0;
-      z-index: 0;
-      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .shape {
@@ -54,7 +56,7 @@
       width: 30px;
       height: 30px;
       opacity: 0.2;
-      animation: float 12s infinite linear;
+      animation: float 8s infinite linear;
     }
 
     .circle { border-radius: 50%; background: #ff0066; }
@@ -62,32 +64,16 @@
     .square { background: #ffcc00; }
 
     @keyframes float {
-      0% {
-        transform: translateY(100vh) scale(1);
-      }
-      100% {
-        transform: translateY(-10vh) scale(1.5);
-      }
+      0% { transform: translateY(100vh) scale(1); }
+      100% { transform: translateY(-10vh) scale(1.5); }
     }
 
     .intro-text {
       font-size: 28px;
       color: #ff0066;
       margin-bottom: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 2px solid #fff;
-      width: 0;
-      animation: typing 4s steps(30, end) forwards, blink 0.75s step-end infinite;
-    }
-
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent }
+      animation: slideDown 0.7s ease-out forwards;
+      opacity: 0;
     }
 
     #countdown {
@@ -97,6 +83,8 @@
       border: 1px dashed #ff0066;
       border-radius: 10px;
       margin: 20px 0;
+      animation: fadeIn 0.8s ease 0.5s forwards;
+      opacity: 0;
     }
 
     .celebrate {
@@ -112,15 +100,22 @@
       justify-content: center;
       gap: 15px;
       margin-top: 25px;
+      opacity: 0;
+      animation: zoomIn 0.8s ease 1s forwards;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .gift-list img {
-      width: 90px;
-      height: 90px;
+      width: 150px;
+      height: 150px;
       border-radius: 12px;
-      border: 2px solid #ff0066;
+      border: 3px solid #ff0066;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       background: #fff;
+      margin: 5px;
+      object-fit: cover;
     }
 
     .gift-list img:hover {
@@ -137,33 +132,84 @@
       color: #fff;
       border-radius: 10px;
       cursor: pointer;
+      animation: glow 2s infinite ease-in-out, fadeInUp 0.8s ease 1.5s forwards;
+      opacity: 0;
+    }
+
+    .music-btn {
+      margin-top: 30px;
+      opacity: 1;
       animation: glow 2s infinite ease-in-out;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 18px;
+      padding: 15px 30px;
+    }
+
+    .doll {
+      position: absolute;
+      bottom: 0;
+      right: 20px;
+      height: 160px;
+      animation: moveDoll 5s infinite alternate ease-in-out;
+      z-index: 1;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     @keyframes glow {
-      0%, 100% {
-        box-shadow: 0 0 5px #ff0066;
-      }
-      50% {
-        box-shadow: 0 0 15px #ff0066;
-      }
+      0%, 100% { box-shadow: 0 0 5px #ff0066; }
+      50% { box-shadow: 0 0 15px #ff0066; }
+    }
+
+    @keyframes moveDoll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-40px); }
     }
 
     @media (max-width: 600px) {
-      .intro-text {
-        font-size: 20px;
-      }
-      .gift-list img {
-        width: 80px;
-        height: 80px;
-      }
+      .intro-text { font-size: 20px; }
+      .gift-list img { width: 120px; height: 120px; }
+      .doll { height: 100px; right: 10px; }
+    }
+
+    @media (max-width: 480px) {
+      .gift-list img { width: 100px; height: 100px; }
     }
   </style>
 </head>
 <body>
+  <!-- No automatic audio playback -->
 
   <div class="floating-shapes">
-    <!-- Random floating shapes -->
     <div class="shape circle" style="left:10%; animation-delay: 0s;"></div>
     <div class="shape triangle" style="left:30%; animation-delay: 2s;"></div>
     <div class="shape square" style="left:50%; animation-delay: 4s;"></div>
@@ -172,20 +218,28 @@
   </div>
 
   <div class="container">
-    <div class="intro-text">Squid Game Birthday Countdown</div>
+    <div class="intro-text">Vous ne savez pas quoi m’offrir?<br> j’ai pensé à vous aider un peu ! 🤪</div>
     <div id="countdown"></div>
-    <div class="celebrate">Game Over... It's Your Birthday, Cousin!</div>
+    <div class="celebrate">Game Over... It's Your Birthday, Mehdi!</div>
 
     <div class="gift-list">
-      <img src="img/gift1.jpg" alt="Gift 1">
-      <img src="img/gift2.jpg" alt="Gift 2">
-      <img src="img/gift3.jpg" alt="Gift 3">
-      <img src="img/gift4.jpg" alt="Gift 4">
-      <img src="img/gift5.jpg" alt="Gift 5">
+      <img src="img/wtch.jpg" alt="Gift 1">
+      <img src="img/37bac8a1-44a1-4b61-8fa7-daea2c1e5cca.JPG" alt="Gift 2">
+      <img src="img/3a676b7a-98d0-4cf4-b781-d19e6f814b2a.JPG" alt="Gift 3">
+      <img src="img/bugui.jpg" alt="Gift 4">
+      <img src="img/76f82a4d-4105-4436-9a25-dbcef112888d.JPG" alt="Gift 5">
+      <img src="img/qd.JPG" alt="Gift 6">
     </div>
 
-    <button class="glow-btn">Play Your Birthday Game</button>
+    <button class="glow-btn music-btn" style="margin-top: 30px;" onclick="toggleMusic()">Play Music</button>
   </div>
+
+  <img src="squid.png" class="doll" alt="Squid Doll" />
+
+  <canvas id="fireworks"></canvas>
+
+  <audio id="birthdaySound" src="squide.mp3" preload="auto" loop></audio>
+  <audio id="bgMusic" src="squide.mp3" preload="auto" loop></audio>
 
   <script>
     function updateCountdown() {
@@ -196,20 +250,90 @@
       if (difference <= 0) {
         document.getElementById("countdown").style.display = "none";
         document.querySelector(".celebrate").style.display = "block";
+        triggerFireworks();
+        document.getElementById("birthdaySound").play();
         return;
       }
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       document.getElementById("countdown").innerHTML =
-        `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s left ⏳`;
+        `⏳ ${hours}h ${minutes}m ${seconds}s left ⏳`;
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
+
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function triggerFireworks() {
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          dx: (Math.random() - 0.5) * 6,
+          dy: (Math.random() - 0.5) * 6,
+          radius: Math.random() * 3 + 2,
+          alpha: 1,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`
+        });
+      }
+      animateFireworks();
+    }
+
+    function animateFireworks() {
+      const interval = setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.fill();
+          p.x += p.dx;
+          p.y += p.dy;
+          p.alpha -= 0.01;
+          if (p.alpha <= 0) particles.splice(i, 1);
+        });
+        ctx.globalAlpha = 1;
+        if (particles.length === 0) clearInterval(interval);
+      }, 30);
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Toggle music function
+    function toggleMusic() {
+      const bgMusic = document.getElementById('bgMusic');
+      const musicBtn = document.querySelector('.music-btn');
+
+      if (bgMusic.paused) {
+        bgMusic.volume = 0.5;
+        bgMusic.play();
+        musicBtn.textContent = 'Pause Music';
+      } else {
+        bgMusic.pause();
+        musicBtn.textContent = 'Play Music';
+      }
+    }
+
+    // Initialize music volume when page loads
+    window.addEventListener('load', function() {
+      const bgMusic = document.getElementById('bgMusic');
+      bgMusic.volume = 0.5; // Set volume to 50%
+    });
+
+
   </script>
 
 </body>
